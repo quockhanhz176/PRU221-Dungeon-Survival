@@ -7,16 +7,13 @@ public class Player : MonoBehaviour
     public float Speed = 10;
     public Joystick Joystick;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Vector2 LookDirection { get; private set; } = Vector2.right;
 
-    // Update is called once per frame
     void Update()
     {
         var direction = new Vector2(Joystick.Horizontal, Joystick.Vertical);
+        if (direction != Vector2.zero)
+            LookDirection = direction;
         transform.position += (Vector3)direction * Speed * Time.deltaTime;
     }
 }
