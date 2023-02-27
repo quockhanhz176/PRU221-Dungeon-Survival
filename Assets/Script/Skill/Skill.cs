@@ -39,7 +39,7 @@ public class Skill : MonoBehaviour
                 projectilePrefab,
                 firePoint.position + projectileOffset,
                 //Quaternion.LookRotation(projectileDirectionVector, Vector2.up)
-                Quaternion.identity
+                Quaternion.identity //TODO: make projectile rotate to make it's 'tail' point toward the player
                 );
 
             var projectileComponent = projectile.GetComponent<Projectile>();

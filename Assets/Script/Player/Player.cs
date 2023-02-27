@@ -6,14 +6,20 @@ public class Player : MonoBehaviour
 {
     public float Speed = 10;
     public Joystick Joystick;
-
     public Vector2 LookDirection { get; private set; } = Vector2.right;
+
+    private Rigidbody2D _rigidBody;
+
+    private void Start()
+    {
+        _rigidBody = GetComponent<Rigidbody2D>();
+    }
 
     void Update()
     {
         var direction = new Vector2(Joystick.Horizontal, Joystick.Vertical);
         if (direction != Vector2.zero)
             LookDirection = direction;
-        transform.position += (Vector3)direction * Speed * Time.deltaTime;
+        _rigidBody.velocity = direction * Speed;
     }
 }
