@@ -1,0 +1,128 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine;
+
+/// <summary>
+/// The <c>Health</c> class use the Chain of Responsibility design pattern to handle health
+/// </summary>
+public class Health : MonoBehaviour
+{
+    [Header("Team Settings")]
+    [Tooltip("The team associated with this damage")]
+    public int teamId = 0;
+
+    [Header("Health Settings")]
+    [Tooltip("The maximum health value")]
+    public int maximumHealth = 1;
+    [Tooltip("The current in game health value")]
+    [SerializeField]
+    private int _currentHealth = 1;
+    public int CurrentHealth
+    {
+        get => _currentHealth;
+        private set => _currentHealth = value;
+    }
+    [Tooltip("Invulnerability duration, in seconds, after taking damage")]
+    public float invincibilityTime = 1f;
+
+    #region Health handler
+    private HealthHandler _healthHandler;
+
+    public void AddHealthHandler(HealthHandler handler)
+    {
+        handler.SetNext(_healthHandler);
+        _healthHandler = handler;
+    }
+    //return true if the handler is found and removed, false otherwise
+    public bool RemoveHealthHandler(HealthHandler handler)
+    {
+        if (_healthHandler == handler)
+        {
+            _healthHandler = _healthHandler.NextHandler;
+            return true;
+        }
+        else
+        {
+            var previousHandler = _healthHandler;
+            while (_healthHandler.NextHandler != null)
+            {
+                if (_healthHandler.NextHandler == handler)
+                {
+                    _healthHandler.SetNext(handler.NextHandler);
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    #endregion
+
+    private void Start()
+    {
+        _healthHandler = new DefaultHealthHandler(this);
+    }
+
+    public void TakeDamage(int damageAmount) => _healthHandler.DeductHealth(damageAmount);
+
+    public void ReceiveHealing(int healingAmount) => _healthHandler.AddHealth(healingAmount);
+
+    [Header("Effects & Polish")]
+    [Tooltip("The effect to create when this health dies")]
+    public GameObject deathEffect;
+    [Tooltip("The effect to create when this health is damaged (but does not die)")]
+    public GameObject hitEffect;
+
+    private void Die()
+    {
+        if (deathEffect != null)
+        {
+            Instantiate(deathEffect, transform.position, transform.rotation, null);
+        }
+        Destroy(gameObject);
+    }
+    private IEnumerator BeInvincible()
+    {
+        var invincibleHandler = new InvincibleHealthHandler();
+        AddHealthHandler(invincibleHandler);
+        yield return new WaitForSeconds(invincibilityTime);
+        RemoveHealthHandler(invincibleHandler);
+    }
+
+    public class DefaultHealthHandler : HealthHandler
+    {
+        private Health _outer;
+
+        public DefaultHealthHandler(Health health)
+        {
+            _outer = health;
+        }
+
+        public override int AddHealth(int health)
+        {
+            var actualHealingAmount = Mathf.Min(health, _outer.maximumHealth - _outer.CurrentHealth);
+            _outer.CurrentHealth += actualHealingAmount;
+            return actualHealingAmount;
+        }
+        public override int DeductHealth(int health)
+        {
+            var actualLosingAmount = Mathf.Min(health, _outer.CurrentHealth);
+            _outer.CurrentHealth -= actualLosingAmount;
+            if (_outer.hitEffect != null)
+            {
+                Instantiate(_outer.hitEffect, _outer.transform.position, _outer.transform.rotation, null);
+            }
+            if (_outer.CurrentHealth <= 0)
+            {
+                _outer.Die();
+            }
+            else
+            {
+                //Become invincible for a certain time after being damaged, the duration depends on the setting
+                _outer.StartCoroutine(_outer.BeInvincible());
+            }
+            return actualLosingAmount;
+        }
+        
+    }
+}
