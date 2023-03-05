@@ -1,5 +1,7 @@
 ﻿public enum PooledObjectName
 {
     BasicBullet,
-    PiercingBullet
+    PiercingBullet,
+    BulletStormBullet,
+    BulletStormPickupable
 }

@@ -24,12 +24,14 @@ public class DashSkill : MonoBehaviour, ActivatableSkill
 
     private float _coolDownLeft = 0;
 
-    public void Activate()
+    public bool Activate()
     {
-        if(_coolDownLeft <= 0)
+        if (_coolDownLeft <= 0)
         {
             StartCoroutine(Dash());
+            return true;
         }
+        return false;
     }
 
     public float GetCoolDownLeft()
@@ -47,10 +49,12 @@ public class DashSkill : MonoBehaviour, ActivatableSkill
         var startTime = Time.time;
         var direction = DirectionGetter.Invoke();
         Rigidbody.velocity = direction.normalized * Distance / Duration;
+        var coolDownFinishTime = startTime + Duration + CoolDown;
 
         //during dash
         while (Time.time - startTime < Duration)
         {
+            _coolDownLeft = coolDownFinishTime - Time.time;
             yield return null;
         }
 
@@ -60,10 +64,8 @@ public class DashSkill : MonoBehaviour, ActivatableSkill
             OnDashFinish.Invoke();
         }
         Rigidbody.velocity = Vector2.zero;
-        _coolDownLeft = CoolDown;
 
         //wait for cooldown
-        var coolDownFinishTime = startTime + Duration + CoolDown;
         while (_coolDownLeft > 0)
         {
             _coolDownLeft = coolDownFinishTime - Time.time;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ public class Damage : MonoBehaviour
     public bool dealDamageOnCollision = false;
     [Tooltip("Whether or not to apply damage on collider collision stays")]
     public bool dealDamageOnCollisionStay = false;
+    public Action<int> OnDameDealt;
 
     /// <summary>
     /// Description:
@@ -102,7 +104,11 @@ public class Damage : MonoBehaviour
         {
             if (collidedHealth.teamId != this.teamId)
             {
-                collidedHealth.TakeDamage(damageAmount);
+                var damage = collidedHealth.TakeDamage(damageAmount);
+                if (OnDameDealt != null)
+                {
+                    OnDameDealt(damage);
+                }
                 if (destroyAfterDamage)
                 {
                     Destroy(this.gameObject);

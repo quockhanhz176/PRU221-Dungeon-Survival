@@ -19,15 +19,13 @@ public class BasicShootSkill : MonoBehaviour, ActivatableSkill
 
     private float _nextActivatableTime = 0;
 
-    private float _basicShootRange;
-
     private float _bulletRadius;
 
     public void Start()
     {
         ProjectileLauncher = new ProjectileLauncher(() => BulletFactory.CreateBullet());
         ProjectileLauncher.Speed = Speed;
-        ProjectileLauncher.Range = Range;
+        ProjectileLauncher.DestroyAfter = Range / Speed;
         SetBulletFactory(new BasicBulletFactory());
     }
 
@@ -37,12 +35,13 @@ public class BasicShootSkill : MonoBehaviour, ActivatableSkill
         UpdateSpecs();
     }
 
-    public void Activate()
+    public bool Activate()
     {
-        if (GetCoolDownLeft() > 0) return;
+        if (GetCoolDownLeft() > 0) return false;
 
         ProjectileLauncher.Launch(transform.position, getDirection());
         _nextActivatableTime = Time.time + CoolDown;
+        return true;
     }
 
     // the shoot direction is the nearest enemy if there is one or more present in a radius of 20 surrounding the player
@@ -50,7 +49,7 @@ public class BasicShootSkill : MonoBehaviour, ActivatableSkill
     private Vector2 getDirection()
     {
         //find nearest enemy
-        var colliders = Physics2D.OverlapCircleAll(transform.position, _basicShootRange);
+        var colliders = Physics2D.OverlapCircleAll(transform.position, Range);
         Collider2D closetEnemy = null;
         var biggestDistance = float.MaxValue;
         foreach (var enemy in colliders.Where(c => c.gameObject.tag == "Enemy"))
@@ -85,8 +84,6 @@ public class BasicShootSkill : MonoBehaviour, ActivatableSkill
 
     private void UpdateSpecs()
     {
-        _basicShootRange = ProjectileLauncher.Range;
-
         var projectile = BulletFactory.CreateBullet();
         _bulletRadius = projectile.transform.localScale.x;
         var poolObject = projectile.GetComponent<PoolObject>();

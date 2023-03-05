@@ -63,9 +63,19 @@ public class Health : MonoBehaviour
         _healthHandler = new DefaultHealthHandler(this);
     }
 
-    public void TakeDamage(int damageAmount) => _healthHandler.DeductHealth(damageAmount);
+    /// <summary>
+    /// Deal damage to this health. The damage taken can be different from the damage dealt, depending on buffs and debuffs.
+    /// </summary>
+    /// <param name="damageAmount">The damage dealt</param>
+    /// <returns>The damage taken</returns>
+    public int TakeDamage(int damageAmount) => _healthHandler.DeductHealth(damageAmount);
 
-    public void ReceiveHealing(int healingAmount) => _healthHandler.AddHealth(healingAmount);
+    /// <summary>
+    /// Heal this health. The healing received can be different from the healing dealt, depending on buffs and debuffs.
+    /// </summary>
+    /// <param name="healingAmount">The healing dealt</param>
+    /// <returns>The healing received</returns>
+    public int ReceiveHealing(int healingAmount) => _healthHandler.AddHealth(healingAmount);
 
     [Header("Effects & Polish")]
     [Tooltip("The effect to create when this health dies")]
