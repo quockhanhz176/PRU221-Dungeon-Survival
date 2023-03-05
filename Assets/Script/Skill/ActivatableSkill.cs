@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 public interface ActivatableSkill
 {
-    public void Activate();
-
-    public float GetCoolDownLeft();
+    /// <summary>
+    /// Activate the skill
+    /// </summary>
+    /// <returns>Whether the activation was successful</returns>
+    public bool Activate();
 }
 

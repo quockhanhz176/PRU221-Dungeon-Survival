@@ -7,8 +7,8 @@ public class Player : MonoBehaviour
     public float Speed = 10;
     public Joystick Joystick;
     public Vector2 LookDirection { get; private set; } = Vector2.right;
-
     public bool IsDashing = false;
+    public bool IsUsingBulletStorm = false;
 
     private Rigidbody2D _rigidBody;
 

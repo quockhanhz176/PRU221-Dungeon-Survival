@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class BasicBullet : PoolObject
+public class BulletStormBullet : PoolObject
 {
     public override PooledObjectName GetPoolObjectName()
     {
-        return PooledObjectName.BasicBullet;
+        return PooledObjectName.BulletStormBullet;
     }
-
     public override void StartUp()
     {
         gameObject.SetActive(true);
+        transform.rotation = Quaternion.identity;
     }
 }

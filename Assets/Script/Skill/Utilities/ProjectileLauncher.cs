@@ -4,10 +4,11 @@ using System;
 
 public class ProjectileLauncher
 {
-    public float Range = 5;
+    [Tooltip("Time(seconds) after which projectile will be destroyed if it has Destroyable script attached")]
+    public float DestroyAfter = 1;
     public float Speed = 5;
     public int ProjectTileCount = 1;
-    public int SpreadDegree = 0;
+    public float SpreadDegree = 0;
     public float FirePointOffset = 0.5f;
 
     public Func<GameObject> ProjectileGetter;
@@ -25,22 +26,21 @@ public class ProjectileLauncher
         {
             var degree = -totalSpread / 2 + angleDisplacement + (projectileNo - 1) * SpreadDegree;
             var projectileDirectionVector = (Quaternion.Euler(0, 0, degree) * direction).normalized;
-
             var projectileOffset = projectileDirectionVector * FirePointOffset;
 
             GameObject projectile = ProjectileGetter.Invoke();
             projectile.transform.position = firePoint + (Vector2)projectileOffset;
-            //TODO: rotate projectile so its 'tail' point toward the player
+            projectile.transform.rotation *= Quaternion.FromToRotation(Vector2.right, projectileDirectionVector);
 
             var destroyable = projectile.GetComponent<Destroyable>();
-            if(destroyable != null)
+            if (destroyable != null && DestroyAfter > 0)
             {
-                destroyable.DestroyAfter = Range / Speed;
+                destroyable.DestroyAfter = DestroyAfter;
+                destroyable.Start();
             }
-            destroyable.Start();
 
             var projectileRigidbody = projectile.GetComponent<Rigidbody2D>();
-            projectileRigidbody.velocity = Quaternion.Euler(0, 0, degree) * projectileDirectionVector * Speed;
+            projectileRigidbody.velocity = projectileDirectionVector * Speed;
         }
     }
 }
