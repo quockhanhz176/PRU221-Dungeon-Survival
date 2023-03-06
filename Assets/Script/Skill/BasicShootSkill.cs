@@ -23,7 +23,10 @@ public class BasicShootSkill : MonoBehaviour, ActivatableSkill
 
     public void Start()
     {
-        ProjectileLauncher = new ProjectileLauncher(() => BulletFactory.CreateBullet());
+        ProjectileLauncher = new ProjectileLauncher(() =>
+        {
+            return BulletFactory.CreateBullet();
+        });
         ProjectileLauncher.Speed = Speed;
         ProjectileLauncher.DestroyAfter = Range / Speed;
         SetBulletFactory(new BasicBulletFactory());
@@ -89,7 +92,7 @@ public class BasicShootSkill : MonoBehaviour, ActivatableSkill
         var poolObject = projectile.GetComponent<PoolObject>();
         if (poolObject != null)
         {
-            GameManager.Instance.ObjectPool.ReturnPooledObject(poolObject.GetPoolObjectName(), projectile);
+            poolObject.ReturnToPool();
         }
         else
         {

@@ -4,23 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public abstract class HealthHandler
+public abstract class HealthHandler : IHealthHandler
 {
-    public HealthHandler NextHandler;
+    private IHealthHandler _nextHandler;
 
-    public virtual HealthHandler SetNext(HealthHandler handler)
+    public virtual IHealthHandler SetNext(IHealthHandler handler)
     {
-        NextHandler = handler;
+        _nextHandler = handler;
         return handler;
+    }
+
+    public IHealthHandler GetNext()
+    {
+        return _nextHandler;
     }
 
     public virtual int AddHealth(int health)
     {
-        return NextHandler != null ? NextHandler.AddHealth(health) : health;
+        return _nextHandler != null ? _nextHandler.AddHealth(health) : health;
     }
 
     public virtual int DeductHealth(int health)
     {
-        return NextHandler != null ? NextHandler.DeductHealth(health) : health;
+        return _nextHandler != null ? _nextHandler.DeductHealth(health) : health;
     }
 }

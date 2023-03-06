@@ -20,7 +20,7 @@ public abstract class SkillPickupable : PoolObject
         var gameObject = collision.gameObject;
         if (gameObject.tag == "Player")
         {
-            var result = gameObject.GetComponent<SkillController>().SubmitThirdSkill(GetPickupableSkill());
+            var result = gameObject.GetComponent<Player>().SubmitPickupableSkill(GetPickupableSkill());
             if (result) ReturnToPool();
         }
     }
