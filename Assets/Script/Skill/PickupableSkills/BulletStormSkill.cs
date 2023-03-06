@@ -17,6 +17,7 @@ public class BulletStormSkill : PickupableSkill
     public float Range = 3;
     public float HealingProportion = 0.1f;
     public int DamagePerBullet = 1;
+    public float MovementSpeedMultiplier = 0.4f;
 
     private bool _duringActivation = false;
     // time into skill activation
@@ -65,7 +66,7 @@ public class BulletStormSkill : PickupableSkill
                     _duringActivation = false;
                     _roundFired = 0;
                     _currentPoint = 0;
-                    if(OnSkillActivationFinished != null)
+                    if (OnSkillActivationFinished != null)
                     {
                         OnSkillActivationFinished.Invoke();
                     }

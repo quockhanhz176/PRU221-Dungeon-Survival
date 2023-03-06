@@ -3,5 +3,6 @@
     BasicBullet,
     PiercingBullet,
     BulletStormBullet,
-    BulletStormPickupable
+    BulletStormPickupable,
+    PiercingPickupable
 }

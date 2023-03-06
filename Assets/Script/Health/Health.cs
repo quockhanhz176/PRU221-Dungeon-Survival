@@ -27,29 +27,29 @@ public class Health : MonoBehaviour
     public float invincibilityTime = 1f;
 
     #region Health handler
-    private HealthHandler _healthHandler;
+    private IHealthHandler _healthHandler;
 
-    public void AddHealthHandler(HealthHandler handler)
+    public void AddHealthHandler(IHealthHandler handler)
     {
         handler.SetNext(_healthHandler);
         _healthHandler = handler;
     }
     //return true if the handler is found and removed, false otherwise
-    public bool RemoveHealthHandler(HealthHandler handler)
+    public bool RemoveHealthHandler(IHealthHandler handler)
     {
         if (_healthHandler == handler)
         {
-            _healthHandler = _healthHandler.NextHandler;
+            _healthHandler = _healthHandler.GetNext();
             return true;
         }
         else
         {
             var previousHandler = _healthHandler;
-            while (_healthHandler.NextHandler != null)
+            while (_healthHandler.GetNext() != null)
             {
-                if (_healthHandler.NextHandler == handler)
+                if (_healthHandler.GetNext() == handler)
                 {
-                    _healthHandler.SetNext(handler.NextHandler);
+                    _healthHandler.SetNext(handler.GetNext());
                     return true;
                 }
             }
@@ -133,6 +133,6 @@ public class Health : MonoBehaviour
             }
             return actualLosingAmount;
         }
-        
+
     }
 }
