@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-public class BulletStormPickupable : SkillPickupable
+public class DisintegrationPickupable : SkillPickupable
 {
     protected override ActivatableSkill GetPickupableSkill()
     {
-        return GameManager.Instance.Player.GetComponentInChildren<BulletStormSkill>();
+        return GameManager.Instance.Player.GetComponentInChildren<DisintegrationSkill>();
     }
 }

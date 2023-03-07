@@ -5,15 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class PiercingBullet : PoolObject
+public class BasicBullet : PoolObject
 {
     public override PooledObjectName GetPoolObjectName()
     {
-        return PooledObjectName.PiercingBullet;
+        return PooledObjectName.BasicBullet;
     }
 
     public override void StartUp()
     {
+        gameObject.GetComponent<Destroyable>().ResetStartTime();
         gameObject.SetActive(true);
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 public class PiercingPickupable : SkillPickupable
 {
-    protected override PickupableSkill GetPickupableSkill()
+    protected override ActivatableSkill GetPickupableSkill()
     {
         return GameManager.Instance.Player.GetComponentInChildren<PiercingSkill>();
     }

@@ -3,6 +3,8 @@
     BasicBullet,
     PiercingBullet,
     BulletStormBullet,
+    DisintegrationGun,
     BulletStormPickupable,
-    PiercingPickupable
+    PiercingPickupable,
+    DisintegrationPickupable
 }

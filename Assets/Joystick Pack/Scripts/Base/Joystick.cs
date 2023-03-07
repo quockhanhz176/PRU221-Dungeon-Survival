@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
@@ -30,6 +31,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
     [SerializeField] private AxisOptions axisOptions = AxisOptions.Both;
     [SerializeField] private bool snapX = false;
     [SerializeField] private bool snapY = false;
+    [SerializeField] private UnityEvent<float, float> onPointerUpEvent;
 
     [SerializeField] protected RectTransform background = null;
     [SerializeField] private RectTransform handle = null;
@@ -131,6 +133,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
 
     public virtual void OnPointerUp(PointerEventData eventData)
     {
+        onPointerUpEvent?.Invoke(Horizontal, Vertical);
         input = Vector2.zero;
         handle.anchoredPosition = Vector2.zero;
     }

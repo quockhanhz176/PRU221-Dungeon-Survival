@@ -14,6 +14,7 @@ public class BulletStormBullet : PoolObject
     public override void StartUp()
     {
         gameObject.SetActive(true);
+        gameObject.GetComponent<Destroyable>().ResetStartTime();
         transform.rotation = Quaternion.identity;
     }
 }

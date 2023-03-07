@@ -11,6 +11,7 @@ public class JoystickEditor : Editor
     private SerializedProperty axisOptions;
     private SerializedProperty snapX;
     private SerializedProperty snapY;
+    private SerializedProperty onPointerUpEvent;
     protected SerializedProperty background;
     private SerializedProperty handle;
 
@@ -25,6 +26,7 @@ public class JoystickEditor : Editor
         snapY = serializedObject.FindProperty("snapY");
         background = serializedObject.FindProperty("background");
         handle = serializedObject.FindProperty("handle");
+        onPointerUpEvent = serializedObject.FindProperty("onPointerUpEvent");
     }
 
     public override void OnInspectorGUI()
@@ -37,7 +39,7 @@ public class JoystickEditor : Editor
 
         serializedObject.ApplyModifiedProperties();
 
-        if(handle != null)
+        if (handle != null)
         {
             RectTransform handleRect = (RectTransform)handle.objectReferenceValue;
             handleRect.anchorMax = center;
@@ -54,6 +56,7 @@ public class JoystickEditor : Editor
         EditorGUILayout.PropertyField(axisOptions, new GUIContent("Axis Options", "Which axes the joystick uses."));
         EditorGUILayout.PropertyField(snapX, new GUIContent("Snap X", "Snap the horizontal input to a whole value."));
         EditorGUILayout.PropertyField(snapY, new GUIContent("Snap Y", "Snap the vertical input to a whole value."));
+        EditorGUILayout.PropertyField(onPointerUpEvent, new GUIContent("On Pointer up event", ""));
     }
 
     protected virtual void DrawComponents()
