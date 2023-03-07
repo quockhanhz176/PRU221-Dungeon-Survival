@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// The <c>Health</c> class use the Chain of Responsibility design pattern to handle health

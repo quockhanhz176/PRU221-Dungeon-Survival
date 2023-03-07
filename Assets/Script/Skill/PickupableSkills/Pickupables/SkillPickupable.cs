@@ -25,5 +25,5 @@ public abstract class SkillPickupable : PoolObject
         }
     }
 
-    protected abstract PickupableSkill GetPickupableSkill();
+    protected abstract ActivatableSkill GetPickupableSkill();
 }

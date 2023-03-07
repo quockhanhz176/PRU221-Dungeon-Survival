@@ -25,6 +25,7 @@ public partial class Player : MonoBehaviour
             _psState.Move();
         }
         ShootUpdate();
+        CheckSkillJoystick();
     }
 
     private void Move(float speed)

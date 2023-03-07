@@ -28,6 +28,11 @@ public class Destroyable : MonoBehaviour
         }
     }
 
+    public void ResetStartTime()
+    {
+        _startTime = Time.time;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (DestroyOnCollision) Destroy();

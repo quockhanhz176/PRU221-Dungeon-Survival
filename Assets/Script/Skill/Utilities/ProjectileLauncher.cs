@@ -36,7 +36,6 @@ public class ProjectileLauncher
             if (destroyable != null && DestroyAfter > 0)
             {
                 destroyable.DestroyAfter = DestroyAfter;
-                destroyable.Start();
             }
 
             var projectileRigidbody = projectile.GetComponent<Rigidbody2D>();

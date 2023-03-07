@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class BulletStormSkill : PickupableSkill
+public class BulletStormSkill : ActivatableSkill
 {
     [Tooltip("The spell duration, measured in seconds")]
     public float Duration = 2;
@@ -19,9 +19,6 @@ public class BulletStormSkill : PickupableSkill
     public int DamagePerBullet = 1;
     public float MovementSpeedMultiplier = 0.4f;
 
-    private bool _duringActivation = false;
-    // time into skill activation
-    private float _currentPoint = 0;
     private int _roundFired = 0;
     private ProjectileLauncher ProjectileLauncher;
     private float _displacementAngle = 0;
@@ -51,10 +48,9 @@ public class BulletStormSkill : PickupableSkill
 
     private void Update()
     {
-        if (_duringActivation)
+        UpdateTrackingPoint(point =>
         {
-            _currentPoint += Time.deltaTime;
-            if (_currentPoint >= Duration / (Round - 1) * _roundFired)
+            if (point >= Duration / (Round - 1) * _roundFired)
             {
                 var displacementAngle = _roundFired % 2 == 0 ? 0 : _displacementAngle;
                 ProjectileLauncher.Launch(transform.position, Vector2.up, displacementAngle);
@@ -63,26 +59,17 @@ public class BulletStormSkill : PickupableSkill
                 //if finished
                 if (_roundFired == Round)
                 {
-                    _duringActivation = false;
+                    StopTrackingPoint();
                     _roundFired = 0;
-                    _currentPoint = 0;
-                    if (OnSkillActivationFinished != null)
-                    {
-                        OnSkillActivationFinished.Invoke();
-                    }
+                    OnSkillActivationFinished?.Invoke();
+                    OnSkillFinished?.Invoke();
                 }
             }
-        }
+        });
     }
     public override bool Activate()
     {
-        if (_duringActivation)
-        {
-            return false;
-        }
-
-        _duringActivation = true;
-        return true;
+        return StartTrackingPoint();
     }
 
     public override float GetActivationLeft()
@@ -100,7 +87,7 @@ public class BulletStormSkill : PickupableSkill
     private void AddAccumlatedHealth(float amount)
     {
         _accumulatedHeal += amount;
-        if (_accumulatedHeal > 1)
+        if (_accumulatedHeal >= 1)
         {
             var healAmount = Mathf.FloorToInt(_accumulatedHeal);
             _playerHealth.ReceiveHealing(healAmount);

@@ -39,7 +39,7 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Player Damage
+  - name: Player Damage Bellow
     uniqueID: 3239092475
     locked: 0
   - name: Default
@@ -47,4 +47,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3387275925
+    locked: 0
+  - name: Player Damage Above
+    uniqueID: 4142574097
     locked: 0

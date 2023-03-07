@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class DashSkill : MonoBehaviour, ActivatableSkill
+public class DashSkill : ActivatableSkill
 {
     public float Distance;
 
@@ -16,15 +16,13 @@ public class DashSkill : MonoBehaviour, ActivatableSkill
 
     public Rigidbody2D Rigidbody;
 
-    public Func<Vector2> DirectionGetter = () => Vector2.right;
-
     public Action OnDashStart;
 
     public Action OnDashFinish;
 
     private float _coolDownLeft = 0;
 
-    public bool Activate()
+    public override bool Activate()
     {
         if (_coolDownLeft <= 0)
         {
