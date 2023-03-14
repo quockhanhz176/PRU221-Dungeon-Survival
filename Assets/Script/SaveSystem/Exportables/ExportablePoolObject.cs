@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public abstract class ExportablePoolObject : MonoBehaviour, IExportable<PoolObjectData>
+public abstract class ExportablePoolObject : MonoBehaviour, IExportablePoolObject
 {
     [SerializeField]
     protected PooledObjectName _pooledObjectName;

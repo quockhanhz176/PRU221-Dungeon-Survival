@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,7 +25,15 @@ public class GameManager : MonoBehaviour
 
     public void SaveGame()
     {
-        var exportablePoolObjects = FindObjectsOfType<ExportablePoolObject>(false);
+        var exportablePoolObjects = new List<IExportablePoolObject>();
+        foreach (var o in SceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            if (o.activeInHierarchy)
+            {
+                exportablePoolObjects.AddRange(o.GetComponentsInChildren<IExportablePoolObject>(false));
+            }
+        }
+        
         var gameState = new GameState
         {
             PlayerData = Player.Export(),
