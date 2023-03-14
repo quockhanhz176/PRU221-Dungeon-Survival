@@ -6,40 +6,36 @@ using UnityEngine.UI;
 public abstract class Enemy : PoolObject
 {
     public StateMachine StateMachine { get; private set; }
-    public Animator Anim { get; private set; }
+    public Animator Anim { get; set; }
 
     [FormerlySerializedAs("Enemy Data")] [SerializeField]
     public EnemyScriptableObject enemyData;
 
-    [SerializeField] public Slider _healthUI;
-    [SerializeField] public Slider _shieldUI;
-    [SerializeField] public GameObject _shieldUIGO;
-    public static event Action OnDeath;
+    [SerializeField] public Slider healthUI;
+    [SerializeField] public Slider shieldUI;
     public SpriteRenderer Sprite { get; private set; }
-    public GameObject Player { get; private set; }
+    [SerializeField] public float StopAttackRange = 0f;
 
-    protected virtual void OnHit(int damage)
+    private void OnEnable()
     {
-        if (enemyData.currentHealth <= 0)
-        {
-            OnDeath?.Invoke();
-            // GameManager.Instance.ObjectPool.ReturnPooledObject(PooledObjectName.NightWolf, gameObject);
-            Destroy(gameObject);
-        }
+        SetHealthValue();
+    }
+
+    public override void StartUp()
+    {
+        gameObject.SetActive(true);
     }
 
     public virtual void Awake()
     {
-        Anim = GetComponent<Animator>();
         StateMachine = new StateMachine();
+        Health.OnHealthChanged += SetHealthValue;
+        Shield.OnShieldChanged += SetShieldValue;
     }
 
     public virtual void Start()
     {
-        Player = GameObject.Find("Player");
         Sprite = GetComponent<SpriteRenderer>();
-        _healthUI.value = CalculateHealth();
-        _shieldUI.value = CalculateShield();
     }
 
     public virtual void Update()
@@ -47,23 +43,24 @@ public abstract class Enemy : PoolObject
         StateMachine.Update();
     }
 
+    private void SetHealthValue()
+    {
+        TryGetComponent<Health>(out var healthScript);
+        healthUI.value = (float)healthScript.CurrentHealth / healthScript.maximumHealth;
+    }
+
+    private void SetShieldValue()
+    {
+        TryGetComponent<Shield>(out var shieldScript);
+        shieldUI.value = (float)shieldScript.CurrentShield / shieldScript.maximumShield;
+    }
+
     public virtual void FixedUpdate()
     {
         StateMachine.FixedUpdate();
     }
 
-    protected float CalculateHealth()
+    public virtual void Attack()
     {
-        return (float)enemyData.currentHealth / enemyData.health;
-    }
-
-    protected float CalculateShield()
-    {
-        return (float)enemyData.currentShield / enemyData.shield;
-    }
-
-    public override PooledObjectName GetPoolObjectName()
-    {
-        return PooledObjectName.NightWolf;
     }
 }

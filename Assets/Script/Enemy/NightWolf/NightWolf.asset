@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 1
   shield: 5
-  moveSpeed: 3
+  moveSpeed: 5
   damage: 3
   atkSpeed: 0.25
   detectionRange: 10
-  atkRange: 1
-  currentHealth: 2
+  atkRange: 2
+  currentHealth: 1
   currentShield: 5

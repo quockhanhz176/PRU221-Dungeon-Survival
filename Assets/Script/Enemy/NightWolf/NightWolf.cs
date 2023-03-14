@@ -8,24 +8,24 @@ public class NightWolf : Enemy
     [FormerlySerializedAs("_statusEffect")] [SerializeField]
     private StatusEffectScriptableObject statusEffect;
 
-    protected override void OnHit(int damage)
+    public override PooledObjectName GetPoolObjectName()
     {
-        if (enemyData.currentShield > 0)
-        {
-            enemyData.currentShield = Mathf.Clamp(enemyData.currentShield - damage, 0, enemyData.shield);
-            _shieldUI.value = CalculateShield();
-            _shieldUIGO.SetActive(enemyData.currentShield != 0);
-            return;
-        }
+        return PooledObjectName.NightWolf;
+    }
 
-        enemyData.currentHealth = Mathf.Clamp(enemyData.currentHealth - damage, 0, enemyData.health);
-        _healthUI.value = CalculateHealth();
-
-        base.OnHit(damage);
+    public override void StartUp()
+    {
+        TryGetComponent<Shield>(out var shield);
+        shield.enabled = true;
+        shield.ResetState();
+        TryGetComponent<Health>(out var health);
+        health.Reset();
+        gameObject.SetActive(true);
     }
 
     public override void Awake()
     {
+        Anim = GetComponent<Animator>();
         base.Awake();
     }
 
@@ -45,26 +45,27 @@ public class NightWolf : Enemy
         base.FixedUpdate();
     }
 
-    public void Attack()
+    public override void Attack()
     {
-        Player.GetComponent<Health>().TakeDamage(enemyData.damage);
+        GameManager.Instance.Player.GetComponent<Health>().TakeDamage(enemyData.damage);
         var random = Random.Range(0, 101);
         if (random <= statusEffect.occuredChance)
         {
-            if (!Player.TryGetComponent<StatusEffect>(out var t))
+            if (!GameManager.Instance.Player.TryGetComponent<Poison>(out var t))
             {
-                Player.AddComponent<Poison>();
-                Player.GetComponent<Poison>().Initialize(statusEffect);
+                GameManager.Instance.Player.gameObject.AddComponent<Poison>();
+                GameManager.Instance.Player.GetComponent<Poison>().Initialize(statusEffect);
             }
             else
             {
-                Player.GetComponent<Poison>().Reset();
+                GameManager.Instance.Player.GetComponent<Poison>().Reset();
             }
         }
     }
 
     private void OnDisable()
     {
-        enemyData.ResetData();
+        StateMachine.ChangeState(new NightWolfIdleState(this));
+        // enemyData.ResetData();
     }
 }
