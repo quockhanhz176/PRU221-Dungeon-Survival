@@ -8,23 +8,27 @@ using UnityEngine;
 /// </summary>
 public class Damage : MonoBehaviour
 {
-    [Header("Team Settings")]
-    [Tooltip("The team associated with this damage")]
+    [Header("Team Settings")] [Tooltip("The team associated with this damage")]
     public int teamId = 0;
 
-    [Header("Damage Settings")]
-    [Tooltip("How much damage to deal")]
+    [Header("Damage Settings")] [Tooltip("How much damage to deal")]
     public int damageAmount = 1;
+
     [Tooltip("Whether or not to destroy the attached game object after dealing damage")]
     public bool destroyAfterDamage = true;
+
     [Tooltip("Whether or not to apply damage when triggers collide")]
     public bool dealDamageOnTriggerEnter = false;
+
     [Tooltip("Whether or not to apply damage when triggers stay, for damage over time")]
     public bool dealDamageOnTriggerStay = false;
+
     [Tooltip("Whether or not to apply damage on non-trigger collider collisions")]
     public bool dealDamageOnCollision = false;
+
     [Tooltip("Whether or not to apply damage on collider collision stays")]
     public bool dealDamageOnCollisionStay = false;
+
     public Action<int> OnDameDealt;
 
     /// <summary>
@@ -99,6 +103,13 @@ public class Damage : MonoBehaviour
     /// <param name="collisionGameObject">The game object that has been collided with</param>
     private void DealDamage(GameObject collisionGameObject)
     {
+        collisionGameObject.TryGetComponent<Shield>(out var shield);
+        if (shield != null && shield.enabled)
+        {
+            shield.DeductShield(damageAmount);
+            return;
+        }
+
         Health collidedHealth = collisionGameObject.GetComponent<Health>();
         if (collidedHealth != null)
         {
@@ -109,9 +120,19 @@ public class Damage : MonoBehaviour
                 {
                     OnDameDealt(damage);
                 }
+
                 if (destroyAfterDamage)
                 {
-                    Destroy(this.gameObject);
+                    // Destroy(this.gameObject);
+                    gameObject.TryGetComponent<PoolObject>(out var poolObj);
+                    if (poolObj != null)
+                    {
+                        poolObj.ReturnToPool();
+                    }
+                    else
+                    {
+                        Destroy(gameObject);
+                    }
                 }
             }
         }

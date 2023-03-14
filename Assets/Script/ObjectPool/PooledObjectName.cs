@@ -6,5 +6,9 @@
     DisintegrationGun,
     BulletStormPickupable,
     PiercingPickupable,
-    DisintegrationPickupable
+    DisintegrationPickupable,
+    NightWolf,
+    CursedBowman,
+    Charger,
+    BowProjectile
 }
