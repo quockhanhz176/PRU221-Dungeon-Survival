@@ -117,6 +117,8 @@ public class Health : MonoBehaviour
 
     private IEnumerator BeInvincible()
     {
+        if (invincibilityTime < 0) yield break;
+
         var invincibleHandler = new InvincibleHealthHandler();
         AddHealthHandler(invincibleHandler);
         yield return new WaitForSeconds(invincibilityTime);
@@ -134,6 +136,8 @@ public class Health : MonoBehaviour
 
         public override int AddHealth(int health)
         {
+            if (health <= 0) return 0;
+
             var actualHealingAmount = Mathf.Min(health, _outer.maximumHealth - _outer.CurrentHealth);
             _outer.CurrentHealth += actualHealingAmount;
             return actualHealingAmount;
@@ -141,6 +145,8 @@ public class Health : MonoBehaviour
 
         public override int DeductHealth(int health)
         {
+            if (health <= 0) return 0;
+
             var actualLosingAmount = Mathf.Min(health, _outer.CurrentHealth);
             _outer.CurrentHealth -= actualLosingAmount;
             OnHealthChanged?.Invoke();

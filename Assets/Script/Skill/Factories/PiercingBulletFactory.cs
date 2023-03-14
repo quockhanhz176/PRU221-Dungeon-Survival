@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class PiercingBulletFactory : BulletFactory
+public class PiercingBulletFactory : IBulletFactory
 {
     public GameObject CreateBullet() => GameManager.Instance.ObjectPool.GetPooledObject(PooledObjectName.PiercingBullet);
 }

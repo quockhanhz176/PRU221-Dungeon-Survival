@@ -101,7 +101,7 @@ public class ObjectPool : MonoBehaviour
         obj.GetComponent<PoolObject>().Initialize();
 
         obj.SetActive(false);
-        GameObject.DontDestroyOnLoad(obj);
+        //GameObject.DontDestroyOnLoad(obj);
         return obj;
     }
 

@@ -42,13 +42,33 @@ public class PiercingSkill : ActivatableSkill
 
     public override float GetActivationLeft()
     {
-        if (_duringActivation)
+        if (_isTracking)
         {
             return Duration - _currentPoint;
         }
         else
         {
             return 0;
+        }
+    }
+
+    public override object Export()
+    {
+        return new PickupableSkillData
+        {
+            IsActivated = _isTracking,
+            Progress = _currentPoint,
+            PickupableSkill = PickupableSkill.Piercing
+        };
+    }
+
+    public override void Import(object dataObject)
+    {
+        var o = (PickupableSkillData)dataObject;
+        if (o.IsActivated)
+        {
+            Activate();
+            _currentPoint = o.Progress;
         }
     }
 }

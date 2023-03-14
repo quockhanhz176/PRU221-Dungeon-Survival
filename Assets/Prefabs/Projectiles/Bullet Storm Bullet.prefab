@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6859762367056109322}
   - component: {fileID: 6859762367056109323}
   - component: {fileID: 6859762367056109313}
+  - component: {fileID: 7500274964260612234}
   m_Layer: 8
   m_Name: Bullet Storm Bullet
   m_TagString: Untagged
@@ -160,6 +161,7 @@ MonoBehaviour:
   destroyEffect: {fileID: 0}
   DestroyAfter: 20
   DestroyOnCollision: 1
+  TimeLeft: 0
 --- !u!114 &6859762367056109313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,3 +174,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 549c9289b873dd84c9d24f36f831c3c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7500274964260612234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6859762367056109320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc0bf04c3702204bbdfc634bd905c60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pooledObjectName: 2
+  _destroyable: {fileID: 6859762367056109323}
+  _rigidbody2D: {fileID: 6859762367056109316}

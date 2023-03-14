@@ -23,15 +23,7 @@ public partial class DisintegrationSkill
 
             if (alpha <= 0)
             {
-                _skill._gun.RayActive = false;
-                _skill._gun.ReturnToPool();
-                _skill.OnSkillActivationFinished?.Invoke();
-                if (--_skill._roundLeft == 0)
-                {
-                    _skill.OnSkillFinished?.Invoke();
-                }
-                _skill.StopTrackingPoint();
-                _skill._gunState = new NoGunState(_skill);
+                _skill.StopShooting();
             }
         }
     }

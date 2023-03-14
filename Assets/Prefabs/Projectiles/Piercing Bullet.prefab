@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 7600647342701717711}
   - component: {fileID: 7642865221548071633}
   - component: {fileID: -9003803702894718140}
+  - component: {fileID: -3103641632454341808}
   m_Layer: 12
   m_Name: Piercing Bullet
   m_TagString: Untagged
@@ -262,6 +263,7 @@ MonoBehaviour:
   destroyEffect: {fileID: 0}
   DestroyAfter: 20
   DestroyOnCollision: 1
+  TimeLeft: 0
 --- !u!114 &-9003803702894718140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,3 +276,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ba089b9a16cb044fbd7a2afb2ad96a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-3103641632454341808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4965036058207761386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc0bf04c3702204bbdfc634bd905c60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pooledObjectName: 1
+  _destroyable: {fileID: 7642865221548071633}
+  _rigidbody2D: {fileID: 7023589659918340238}

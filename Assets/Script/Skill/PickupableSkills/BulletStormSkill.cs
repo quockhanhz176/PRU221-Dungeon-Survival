@@ -59,22 +59,19 @@ public class BulletStormSkill : ActivatableSkill
                 //if finished
                 if (_roundFired == Round)
                 {
-                    StopTrackingPoint();
-                    _roundFired = 0;
-                    OnSkillActivationFinished?.Invoke();
-                    OnSkillFinished?.Invoke();
+                    StopShooting();
                 }
             }
         });
     }
     public override bool Activate()
     {
-        return StartTrackingPoint();
+        return StartTrackingPoint(() => _roundFired = 0);
     }
 
     public override float GetActivationLeft()
     {
-        if (_duringActivation)
+        if (_isTracking)
         {
             return Duration - _currentPoint;
         }
@@ -93,5 +90,41 @@ public class BulletStormSkill : ActivatableSkill
             _playerHealth.ReceiveHealing(healAmount);
             _accumulatedHeal -= healAmount;
         }
+    }
+
+    public override object Export()
+    {
+        return new BulletStormData
+        {
+            Progress = _currentPoint,
+            IsActivated = _isTracking,
+            RoundsFired = _roundFired,
+            AccumulatedHealth = _accumulatedHeal,
+            PickupableSkill = PickupableSkill.BulletStorm
+        };
+    }
+
+    public override void Import(object dataObject)
+    {
+        if (_isTracking)
+        {
+            StopShooting();
+        }
+
+        var o = (BulletStormData)dataObject;
+        StopTrackingPoint();
+        if (o.IsActivated)
+        {
+            StartTrackingPoint(currentPoint: o.Progress);
+        }
+        _roundFired = o.RoundsFired;
+        _accumulatedHeal = o.AccumulatedHealth;
+    }
+
+    private void StopShooting()
+    {
+        StopTrackingPoint();
+        OnSkillActivationFinished?.Invoke();
+        OnSkillFinished?.Invoke();
     }
 }

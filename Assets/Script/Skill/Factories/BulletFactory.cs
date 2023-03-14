@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public interface BulletFactory
+public interface IBulletFactory
 {
     public GameObject CreateBullet();
 }

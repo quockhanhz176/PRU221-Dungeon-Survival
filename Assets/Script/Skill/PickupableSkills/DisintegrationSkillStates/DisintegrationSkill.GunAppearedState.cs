@@ -25,7 +25,7 @@ public partial class DisintegrationSkill
                 _skill._gun.RayActive = true;
             }
 
-            var currentPoint = point - _skill.GunAppearDuration;
+            var currentPoint = Mathf.Min(point - _skill.GunAppearDuration, 1);
             _skill._gun.SetRayWidth(_skill._rayWidthFunction(currentPoint));
             _skill._gun.transform.position =
                 _initialPosition + (_skill._pushBackFunction(currentPoint) * _skill.GunPushBackMax * -_skill._direction);
