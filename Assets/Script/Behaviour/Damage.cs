@@ -123,7 +123,16 @@ public class Damage : MonoBehaviour
 
                 if (destroyAfterDamage)
                 {
-                    Destroy(this.gameObject);
+                    // Destroy(this.gameObject);
+                    gameObject.TryGetComponent<PoolObject>(out var poolObj);
+                    if (poolObj != null)
+                    {
+                        poolObj.ReturnToPool();
+                    }
+                    else
+                    {
+                        Destroy(gameObject);
+                    }
                 }
             }
         }

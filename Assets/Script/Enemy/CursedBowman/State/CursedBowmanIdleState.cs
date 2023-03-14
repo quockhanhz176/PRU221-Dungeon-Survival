@@ -25,13 +25,6 @@ public class CursedBowmanIdleState : EnemyIdleState
             return;
         }
 
-        if (Vector2.Distance(Enemy.transform.position, GameManager.Instance.Player.transform.position) >
-            Enemy.StopAttackRange)
-        {
-            Enemy.StateMachine.ChangeState(new CursedBowmanAttackState(Enemy));
-            return;
-        }
-
         base.ExecuteLogic();
     }
 

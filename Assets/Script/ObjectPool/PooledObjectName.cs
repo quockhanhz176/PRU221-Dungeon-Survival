@@ -9,5 +9,6 @@
     DisintegrationPickupable,
     NightWolf,
     CursedBowman,
-    Charger
+    Charger,
+    BowProjectile
 }

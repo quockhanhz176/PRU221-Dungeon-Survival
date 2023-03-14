@@ -2,7 +2,7 @@
 
 public class CursedBowmanAttackState : EnemyAttackState
 {
-    private float timer;
+    private new float _timer;
 
     public CursedBowmanAttackState(Enemy enemy) : base(enemy)
     {
@@ -10,7 +10,8 @@ public class CursedBowmanAttackState : EnemyAttackState
 
     public override void Enter()
     {
-        timer = Enemy.enemyData.atkSpeed;
+        _timer = Enemy.enemyData.atkSpeed;
+        Debug.Log(_timer);
     }
 
     public override void Exit()
@@ -20,10 +21,24 @@ public class CursedBowmanAttackState : EnemyAttackState
 
     public override void ExecuteLogic()
     {
-        timer -= Time.deltaTime;
-        if (!(timer <= 0)) return;
-        timer = Enemy.enemyData.atkSpeed;
+        if (Vector2.Distance(Enemy.transform.position, GameManager.Instance.Player.transform.position) >
+            Enemy.enemyData.atkRange)
+        {
+            Enemy.StateMachine.ChangeState(new CursedBowmanChaseState(Enemy));
+            return;
+        }
+
+        if (Vector2.Distance(Enemy.transform.position, GameManager.Instance.Player.transform.position) <
+            Enemy.StopAttackRange)
+        {
+            return;
+        }
+
+        _timer -= Time.deltaTime;
+        if (!(_timer <= 0)) return;
+        _timer = Enemy.enemyData.atkSpeed;
         Enemy.Attack();
+        base.ExecuteLogic();
     }
 
     public override void ExecutePhysic()

@@ -1978,6 +1978,14 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4373386370925890682, guid: e17ae609489e11b4d88d93ec6c3825fe, type: 3}
+      propertyPath: _currentHealth
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4373386370925890682, guid: e17ae609489e11b4d88d93ec6c3825fe, type: 3}
+      propertyPath: invincibilityTime
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4373386370925890684, guid: e17ae609489e11b4d88d93ec6c3825fe, type: 3}
       propertyPath: Joystick
       value: 
@@ -2071,7 +2079,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
       propertyPath: PoolObjectTypes.Array.size
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
       propertyPath: PoolObjectTypes.Array.data[4].prefab
@@ -2088,7 +2096,11 @@ PrefabInstance:
     - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
       propertyPath: PoolObjectTypes.Array.data[7].prefab
       value: 
-      objectReference: {fileID: 8156444501874121803, guid: 0d2150b9f40b0b1498a9b503a073ac3e, type: 3}
+      objectReference: {fileID: 2985809272955903083, guid: 4152b01ec7b1d69459aa260ab3dcff0b, type: 3}
+    - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
+      propertyPath: PoolObjectTypes.Array.data[8].prefab
+      value: 
+      objectReference: {fileID: 6989068580969326430, guid: ae4862ffa6e3b124fb855d58ccb4eb87, type: 3}
     - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
       propertyPath: PoolObjectTypes.Array.data[3].objName
       value: 4
@@ -2107,7 +2119,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
       propertyPath: PoolObjectTypes.Array.data[7].objName
-      value: 7
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
+      propertyPath: PoolObjectTypes.Array.data[8].objName
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
       propertyPath: PoolObjectTypes.Array.data[2].initialCapacity
@@ -2127,6 +2143,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
       propertyPath: PoolObjectTypes.Array.data[7].initialCapacity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6678886621778563975, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}
+      propertyPath: PoolObjectTypes.Array.data[8].initialCapacity
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6678886622436491259, guid: 9cfe7ed10f6427b4db747a7cc0d23b82, type: 3}

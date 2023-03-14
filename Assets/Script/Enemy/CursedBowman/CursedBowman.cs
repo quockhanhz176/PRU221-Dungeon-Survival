@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class CursedBowman : Enemy
 {
@@ -43,6 +44,8 @@ public class CursedBowman : Enemy
 
     public override void Attack()
     {
-        
+        var obj = GameManager.Instance.ObjectPool.GetPooledObject(PooledObjectName.BowProjectile);
+        obj.GetComponent<BowProjectile>()
+            .Initialize(transform.position, GameManager.Instance.Player.transform.position);
     }
 }
