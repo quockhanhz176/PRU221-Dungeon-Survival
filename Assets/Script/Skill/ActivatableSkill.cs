@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public abstract class ActivatableSkill : MonoBehaviour
+public abstract class ActivatableSkill : MonoBehaviour, IExportable<object>
 {
     public Func<Vector2> DirectionGetter = () => Vector2.right;
     /// <summary>
@@ -15,7 +15,7 @@ public abstract class ActivatableSkill : MonoBehaviour
     public Action OnSkillActivationFinished;
     public Action OnSkillFinished;
 
-    protected bool _duringActivation = false;
+    protected bool _isTracking = false;
     // time into skill activation
     protected float _currentPoint = 0;
     protected bool _justActivated = false;
@@ -40,17 +40,18 @@ public abstract class ActivatableSkill : MonoBehaviour
     /// <summary>
     /// Start tracking the point into activation and perform onPointStart if tracking hasn't been started
     /// </summary>
-    /// <param name="onPointStart">Action to be performed if start tracking was successful</param>
-    protected bool StartTrackingPoint(Action onPointStart = null)
+    /// <param name="onSuccess">Action to be performed if start tracking was successful</param>
+    protected bool StartTrackingPoint(Action onSuccess = null, float currentPoint = 0)
     {
-        if (_duringActivation)
+        if (_isTracking)
         {
             return false;
         }
 
-        _duringActivation = true;
+        _isTracking = true;
         _justActivated = true;
-        onPointStart?.Invoke();
+        _currentPoint = currentPoint;
+        onSuccess?.Invoke();
         return true;
     }
 
@@ -60,7 +61,7 @@ public abstract class ActivatableSkill : MonoBehaviour
     /// <param name="onPointUpdate">Action performed every frame</param>
     protected void UpdateTrackingPoint(Action<float> onPointUpdate = null)
     {
-        if (_duringActivation)
+        if (_isTracking)
         {
             if (_justActivated)
             {
@@ -77,8 +78,11 @@ public abstract class ActivatableSkill : MonoBehaviour
 
     protected void StopTrackingPoint()
     {
-        _duringActivation = false;
-        _currentPoint = 0;
+        _isTracking = false;
     }
+
+    public abstract object Export();
+
+    public abstract void Import(object o);
 }
 

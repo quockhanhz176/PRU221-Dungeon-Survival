@@ -5,24 +5,33 @@ using UnityEngine;
 public class Destroyable : MonoBehaviour
 {
     public GameObject destroyEffect;
-
     [Tooltip("The number of second after which the object will be destroyed." +
         " Set to 0 or smaller to not destroy the object after a certain amount of time")]
     public float DestroyAfter;
-
     public bool DestroyOnCollision = true;
+    public float TimeLeft;
 
-    private float _startTime;
+    private bool _isJustStarted = false;
 
     public void Start()
     {
-        _startTime = Time.time;
+        ResetStartTime();
     }
 
     public void Update()
     {
         if (DestroyAfter <= 0) return;
-        if (Time.time - _startTime >= DestroyAfter)
+
+        if (_isJustStarted)
+        {
+            _isJustStarted = false;
+        }
+        else
+        {
+            TimeLeft -= Time.deltaTime;
+        }
+
+        if (TimeLeft <= 0)
         {
             Destroy();
         }
@@ -30,7 +39,8 @@ public class Destroyable : MonoBehaviour
 
     public void ResetStartTime()
     {
-        _startTime = Time.time;
+        TimeLeft = DestroyAfter;
+        _isJustStarted = true;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

@@ -16,7 +16,7 @@ public partial class DisintegrationSkill
 
         public override void Update(float point)
         {
-            var alpha = point / _skill.GunAppearDuration;
+            var alpha = Mathf.Min(point / _skill.GunAppearDuration, 1);
             _skill._gun.SetAlpha(alpha);
             if (alpha >= 1)
             {

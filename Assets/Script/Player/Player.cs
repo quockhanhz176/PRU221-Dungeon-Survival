@@ -15,6 +15,7 @@ public partial class Player : MonoBehaviour
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _psState = new NoSkillState(this);
+        _health = GetComponent<Health>();
         SetupSkills();
     }
 
