@@ -9,66 +9,86 @@ using UnityEngine;
 public class DashSkill : ActivatableSkill
 {
     public float Distance;
-
     public float Duration;
-
     public float CoolDown;
-
     public Rigidbody2D Rigidbody;
-
     public Action OnDashStart;
-
     public Action OnDashFinish;
 
-    private float _coolDownLeft = 0;
+    private bool _dashFinished = true;
+    private Vector2 _direction;
 
     public override bool Activate()
     {
-        if (_coolDownLeft <= 0)
+        return StartTrackingPoint(() =>
         {
-            StartCoroutine(Dash());
-            return true;
-        }
-        return false;
+            _direction = DirectionGetter.Invoke();
+            StartDashing();
+        });
+    }
+
+    public void Update()
+    {
+        UpdateTrackingPoint(point =>
+        {
+            if (point >= Duration)
+            {
+                StopDashing();
+            }
+
+            if (point >= Duration + CoolDown)
+            {
+                StopTrackingPoint();
+            }
+        });
     }
 
     public float GetCoolDownLeft()
     {
-        return _coolDownLeft;
+        return Mathf.Max(CoolDown + Duration - _currentPoint, 0);
     }
 
-    private IEnumerator Dash()
+    public override object Export()
     {
-        // start dash
-        if (OnDashStart != null)
+        return new DashData
         {
-            OnDashStart.Invoke();
-        }
-        var startTime = Time.time;
-        var direction = DirectionGetter.Invoke();
-        Rigidbody.velocity = direction.normalized * Distance / Duration;
-        var coolDownFinishTime = startTime + Duration + CoolDown;
+            Progress = _currentPoint,
+            IsTracking = _isTracking,
+            Direction = _direction
+        };
+    }
 
-        //during dash
-        while (Time.time - startTime < Duration)
+    public override void Import(object o)
+    {
+        var data = (DashData)o;
+        StopTrackingPoint();
+        StopDashing();
+        if (data.IsTracking)
         {
-            _coolDownLeft = coolDownFinishTime - Time.time;
-            yield return null;
+            StartTrackingPoint(null, data.Progress);
+            if (data.Progress < Duration)
+            {
+                _direction = data.Direction;
+                StartDashing();
+                _currentPoint = data.Progress;
+            }
         }
+    }
 
-        //after dash
-        if (OnDashFinish != null)
+    private void StartDashing()
+    {
+        OnDashStart.Invoke();
+        Rigidbody.velocity = _direction.normalized * Distance / Duration;
+        _dashFinished = false;
+    }
+
+    private void StopDashing()
+    {
+        if (!_dashFinished)
         {
             OnDashFinish.Invoke();
+            Rigidbody.velocity = Vector2.zero;
+            _dashFinished = true;
         }
-        Rigidbody.velocity = Vector2.zero;
-
-        //wait for cooldown
-        while (_coolDownLeft > 0)
-        {
-            _coolDownLeft = coolDownFinishTime - Time.time;
-            yield return null;
-        }
-        _coolDownLeft = 0;
     }
 }

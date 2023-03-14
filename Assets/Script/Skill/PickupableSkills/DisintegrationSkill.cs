@@ -17,7 +17,7 @@ public partial class DisintegrationSkill : ActivatableSkill
 
     private int _roundLeft = 3;
     private DisintegrationGun _gun;
-    private Vector2 _direction;
+    private Vector2 _direction = Vector2.right;
     private Player _player;
     private Func<float, float> _rayWidthFunction;
     private Func<float, float> _pushBackFunction;
@@ -41,23 +41,72 @@ public partial class DisintegrationSkill : ActivatableSkill
 
     public override void Refresh()
     {
-        _roundLeft = 3;
+        _roundLeft = Rounds;
     }
 
     public override bool Activate()
     {
         return StartTrackingPoint(() =>
         {
-            _gun = GameManager.Instance.ObjectPool.GetPooledObject(PooledObjectName.DisintegrationGun).GetComponent<DisintegrationGun>();
             _direction = DirectionGetter.Invoke().normalized;
-            _gun.gameObject.transform.position = _player.transform.position + (Vector3)_direction * -DistanceBehindPlayer;
-            _gun.gameObject.transform.rotation *= Quaternion.FromToRotation(Vector2.right, _direction);
-            _gunState = new GunAppearingState(this);
+            SetupGun();
         });
     }
 
     public override float GetActivationLeft()
     {
         return 0;
+    }
+
+    public override object Export()
+    {
+        return new DisintegrationData
+        {
+            IsActivated = _isTracking,
+            Progress = _currentPoint,
+            RoundsLeft = _roundLeft,
+            Direction = _direction,
+            PickupableSkill = PickupableSkill.Disintegration
+        };
+    }
+
+    public override void Import(object dataObject)
+    {
+        if (_isTracking)
+        {
+            StopShooting();
+        }
+
+        var o = (DisintegrationData)dataObject;
+        _roundLeft = o.RoundsLeft;
+        if (o.IsActivated)
+        {
+            StartTrackingPoint(() =>
+            {
+                _direction = o.Direction;
+                SetupGun();
+            }, o.Progress);
+        }
+    }
+
+    private void SetupGun()
+    {
+        _gun = GameManager.Instance.ObjectPool.GetPooledObject(PooledObjectName.DisintegrationGun).GetComponent<DisintegrationGun>();
+        _gun.gameObject.transform.position = _player.transform.position + (Vector3)_direction * -DistanceBehindPlayer;
+        _gun.gameObject.transform.rotation *= Quaternion.FromToRotation(Vector2.right, _direction);
+        _gunState = new GunAppearingState(this);
+    }
+
+    private void StopShooting()
+    {
+        _gun.RayActive = false;
+        _gun.ReturnToPool();
+        OnSkillActivationFinished?.Invoke();
+        if (--_roundLeft == 0)
+        {
+            OnSkillFinished?.Invoke();
+        }
+        StopTrackingPoint();
+        _gunState = new NoGunState(this);
     }
 }

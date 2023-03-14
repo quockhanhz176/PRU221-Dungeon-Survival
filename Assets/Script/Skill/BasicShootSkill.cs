@@ -11,9 +11,8 @@ public class BasicShootSkill : ActivatableSkill
     public float Speed = 30;
     public float Range = 20;
     public ProjectileLauncher ProjectileLauncher;
-    public BulletFactory BulletFactory { get; private set; }
+    public IBulletFactory BulletFactory { get; private set; }
 
-    private float _nextActivatableTime = 0;
     private float _bulletRadius;
 
     public void Start()
@@ -27,7 +26,18 @@ public class BasicShootSkill : ActivatableSkill
         SetBulletFactory(new BasicBulletFactory());
     }
 
-    public void SetBulletFactory(BulletFactory bulletFactory)
+    private void Update()
+    {
+        UpdateTrackingPoint(point =>
+        {
+            if (point >= CoolDown)
+            {
+                StopTrackingPoint();
+            }
+        });
+    }
+
+    public void SetBulletFactory(IBulletFactory bulletFactory)
     {
         BulletFactory = bulletFactory;
         UpdateSpecs();
@@ -35,16 +45,16 @@ public class BasicShootSkill : ActivatableSkill
 
     public override bool Activate()
     {
-        if (GetCoolDownLeft() > 0) return false;
-
-        ProjectileLauncher.Launch(transform.position, DirectionGetter.Invoke());
-        _nextActivatableTime = Time.time + CoolDown;
-        return true;
+        return StartTrackingPoint(() =>
+        {
+            ProjectileLauncher.Launch(transform.position, DirectionGetter.Invoke());
+        });
     }
 
     public float GetCoolDownLeft()
     {
-        return Mathf.Max(_nextActivatableTime - Time.time, 0);
+        if (_isTracking) return 0;
+        return Mathf.Max(CoolDown - _currentPoint, 0);
     }
 
     public void SetBasicShootDirectionGetter(BasicShootDirectionGetter getter)
@@ -65,6 +75,20 @@ public class BasicShootSkill : ActivatableSkill
         {
             Destroy(projectile);
         }
+    }
+
+    public override object Export()
+    {
+        return new BasicShootData
+        {
+            CoolDownLeft = CoolDown - _currentPoint
+        };
+    }
+
+    public override void Import(object o)
+    {
+        var data = (BasicShootData)o;
+        StartTrackingPoint(null, CoolDown - data.CoolDownLeft);
     }
 
     public delegate Vector2 BasicShootDirectionGetter(float bulletRadius, float range);

@@ -79,26 +79,26 @@ public partial class Player : MonoBehaviour
     /// Submit the pickupable skill to the skill controller
     /// </summary>
     /// <returns>Whether the skill was accepted</returns>
-    public bool SubmitPickupableSkill(ActivatableSkill skill)
+    public bool SubmitPickupableSkill(PickupableSkill skill)
     {
         if (PickupableSkill != null && PickupableSkill.GetActivationLeft() > 0)
         {
             return false;
         }
 
-        skill.OnSkillActivationFinished = _onSkillActivationFinishedDelegate;
-        skill.OnSkillFinished = _onSkillFinishedDelegate;
-        skill.Refresh();
-        PickupableSkill = skill;
+        var newSkill = (ActivatableSkill)GetComponentInChildren(skill.GetScriptType());
+
+        newSkill.OnSkillActivationFinished = _onSkillActivationFinishedDelegate;
+        newSkill.OnSkillFinished = _onSkillFinishedDelegate;
+        newSkill.Refresh();
+        PickupableSkill = newSkill;
         var oldType = PickupableSkillType;
-        PickupableSkillType = GetSkillType(skill);
+        PickupableSkillType = skill.GetSkillType();
         OnPickupableSkillChange?.Invoke(oldType, PickupableSkillType);
         if (PickupableSkillType == PickupableSkillType.Directional)
         {
-            skill.DirectionGetter = _directionalSkilldirectionGetter;
+            newSkill.DirectionGetter = _directionalSkilldirectionGetter;
         }
-
-
         return true;
     }
 
@@ -140,14 +140,6 @@ public partial class Player : MonoBehaviour
         };
     }
 
-    private PickupableSkillType GetSkillType(ActivatableSkill skill)
-    {
-        if (skill.GetType() == typeof(DisintegrationSkill))
-        {
-            return PickupableSkillType.Directional;
-        }
-        return PickupableSkillType.Trigger;
-    }
     private void CheckSkillJoystick()
     {
         var direction = new Vector2(SkillJoystick.Horizontal, SkillJoystick.Vertical);

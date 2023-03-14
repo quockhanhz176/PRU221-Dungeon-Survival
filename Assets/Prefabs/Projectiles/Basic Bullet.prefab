@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6229711779779871552}
   - component: {fileID: 821947587265925949}
   - component: {fileID: 6539272455688971132}
+  - component: {fileID: 5638810424822627568}
   m_Layer: 8
   m_Name: Basic Bullet
   m_TagString: Untagged
@@ -160,6 +161,7 @@ MonoBehaviour:
   destroyEffect: {fileID: 0}
   DestroyAfter: 20
   DestroyOnCollision: 1
+  TimeLeft: 0
 --- !u!114 &6539272455688971132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,3 +174,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f128d8d17cf9fc40a9d51eb8130add8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5638810424822627568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2711048675568417286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc0bf04c3702204bbdfc634bd905c60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pooledObjectName: 0
+  _destroyable: {fileID: 821947587265925949}
+  _rigidbody2D: {fileID: 1778178402}

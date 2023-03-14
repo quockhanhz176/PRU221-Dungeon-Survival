@@ -8,11 +8,17 @@ using UnityEngine;
 /// <summary>
 /// The pickupable that lies on the ground and can be picked up by the player
 /// </summary>
-public abstract class SkillPickupable : PoolObject
+public class SkillPickupable : PoolObject
 {
+    public PickupableSkill skill;
     public override PooledObjectName GetPoolObjectName()
     {
-        return PooledObjectName.BulletStormPickupable;
+        return skill.GetPOName();
+    }
+
+    public override void StartUp()
+    {
+        gameObject.SetActive(true);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -20,10 +26,8 @@ public abstract class SkillPickupable : PoolObject
         var gameObject = collision.gameObject;
         if (gameObject.tag == "Player")
         {
-            var result = gameObject.GetComponent<Player>().SubmitPickupableSkill(GetPickupableSkill());
+            var result = gameObject.GetComponent<Player>().SubmitPickupableSkill(skill);
             if (result) ReturnToPool();
         }
     }
-
-    protected abstract ActivatableSkill GetPickupableSkill();
 }
